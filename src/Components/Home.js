@@ -1,33 +1,26 @@
-import { Line, Pie, Chart } from 'react-chartjs-2';
-import defaultButton from "../default-button.png"
-import pressedButton from "../hover-button.png"
-import hoverButton from "../pressed-button.png"
-import { Chart as ChartJS } from 'chart.js/auto'
-import React, { useState, useEffect } from 'react';
-import logo from "../LogoMakr-1ceYNX.png"
-import Navbar from "./Navbar"
+import { Line, Pie, Chart } from "react-chartjs-2";
+import { Chart as ChartJS } from "chart.js/auto";
+import React, { useState, useEffect } from "react";
+import logo from "../LogoMakr-1ceYNX.png";
+import Navbar from "./Navbar";
 
 const Home = (props) => {
-
-
- /* let portfolioBalance = props.portfolioBalance
+  /* let portfolioBalance = props.portfolioBalance
   portfolioBalance = portfolioBalance.toFixed(2)
 */
 
+  return (
+    <div className="pages" style={{ height: "100vh" }}>
+      <Navbar />
+      <div
+        className="text-center"
+        style={{ paddingTop: "28vh", marginRight: "5vw" }}
+      >
+        <img src={logo}></img>
+      </div>
+      {props.errorMessage && <div>{props.errorMessage}</div>}
 
-
-  return <div className="pages" style={{height: "100vh"}}>
-    <Navbar  />
-    <div className="text-center" style={{paddingTop: "28vh", marginRight: "5vw"}}><img  src={logo}></img></div>
-    {props.errorMessage && <div>{props.errorMessage}</div>}
-    <div style={{paddingTop: "2vh", marginLeft: "37vw"}} >
-             <img onMouseEnter={() => props.handleMouseEnter()} onMouseLeave={() => props.handleMouseLeave()}src={props.imageSrc}  className="pointer"onClick={() => props.handleLoginButtonClick()}></img>
-        </div>
-   
-    
-   
-    
-    {/*  <h1 className="d-flex justify-content-center" style={{paddingTop: "6vh"}}>{portfolioBalance} USD</h1>
+      {/*  <h1 className="d-flex justify-content-center" style={{paddingTop: "6vh"}}>{portfolioBalance} USD</h1>
     <button className="btn btn-danger offset-md-1" style={{fontSize: "70%"}}onClick={() => props.getTokens()}>Refetch</button> 
     <div className="col-md-4 offset-md-1" style={{fontSize: "70%"}}>Refetch Portfolio in case Moralis or CoinGeckos API has issues and You can not see your Data instantely</div>
    
@@ -55,7 +48,7 @@ const Home = (props) => {
   
 
       <h3 className="col-md-4 offset-md-1 ">All ERC20 Tokens you hold!</h3>*/}
-     {/* {props.data !== null && <div >
+      {/* {props.data !== null && <div >
             {props.finalObject.map(index => {
                 return <div key={index.symbol} className="col-md-4 offset-md-1 " style={{border: " 1px solid rgba(0, 0, 0, .5)", marginBottom:"6vh", backgroundColor: "white", padding: "5px", borderRadius: "5px"}}>
                    <div>
@@ -89,7 +82,8 @@ const Home = (props) => {
             })}               
           </div>}
           */}
-  </div>;
+    </div>
+  );
 };
 
 export default Home;

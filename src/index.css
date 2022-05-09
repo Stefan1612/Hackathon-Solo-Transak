@@ -66,12 +66,7 @@ body {
 }
 .UDButton:hover {
 }
-.changeImage {
-  background-color: url("default-button.png");
-}
-.changeImage:hover {
-  background-color: url("hover-button.png");
-}
+
 .loader-wrapper {
   width: 100%;
   height: 100%;

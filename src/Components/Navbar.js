@@ -1,21 +1,18 @@
-import {Link} from "react-router-dom"
-
+import { Link } from "react-router-dom";
 
 const Navbar = (props) => {
-  return <div id="Navbar">
-    
-     
-      
-      
-     
+  return (
+    <div id="Navbar">
       <div>
-        <div style={{fontSize: "50%", textAlign: "auto"}}>{props.account}</div>  
-        <div style={{fontSize: "50%", textAlign: "auto"}}>{props.networkName}: {props.networkChainId}</div>    
+        <div style={{ fontSize: "50%", textAlign: "auto" }}>
+          {props.account}
+        </div>
+        <div style={{ fontSize: "50%", textAlign: "auto" }}>
+          {props.networkName}: {props.networkChainId}
+        </div>
       </div>
-      <div className="UDLogOut"style={{fontSize: "50%", textAlign: "auto"}}>
-      {props.udLoginDomain}
-      </div>
-  </div>;
+    </div>
+  );
 };
 
 export default Navbar;
