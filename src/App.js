@@ -5,7 +5,8 @@ import axios from "axios";
 import { ethers } from "ethers";
 import { Route, Link, Routes, Navigate } from "react-router-dom";
 import Navbar from "./Components/Navbar.js";
-import Home from "./Components/Home.js";
+import Home from "./Components/Home";
+import Transak from "./Components/Transak";
 import { Line, Pie, Chart } from "react-chartjs-2";
 // import PiePort from "./Components/PiePort.js"
 
@@ -20,6 +21,18 @@ function App() {
 
   const [account, setAccount] = useState("");
   //handle fetching analytics using moralis, gecko state
+
+  //provider and signer
+  let provider;
+
+  if (window.ethereum) {
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+  }
+  let signer;
+  if (window.ethereum) {
+    signer = provider.getSigner();
+  }
+
   const [areTokensGeckoInitialized, setAreTokensGeckoInitialized] =
     useState(false);
   const [areTokensFetched, setAreTokensFetched] = useState(false);
@@ -46,13 +59,12 @@ function App() {
   //intermediate while InitializingPort
   let finalArray = undefined;
 
-  //provider metamask
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-
   //requesting account and chainId when user first connected to metamask
   useEffect(() => {
-    FirstLoadGettingAccount();
-    gettingNetworkNameChainId();
+    if (provider) {
+      FirstLoadGettingAccount();
+      gettingNetworkNameChainId();
+    } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function FirstLoadGettingAccount() {
@@ -68,10 +80,12 @@ function App() {
 
   //on chain change
   useEffect(() => {
-    window.ethereum.on("chainChanged", handleChainChanged);
-    return () => {
-      window.ethereum.removeListener("chainChanged", handleChainChanged);
-    };
+    if (provider) {
+      window.ethereum.on("chainChanged", handleChainChanged);
+      return () => {
+        window.ethereum.removeListener("chainChanged", handleChainChanged);
+      };
+    }
   }, []);
 
   function handleChainChanged(_chainId) {
@@ -81,10 +95,15 @@ function App() {
 
   //on account change
   useEffect(() => {
-    window.ethereum.on("accountsChanged", handleAccountsChanged);
-    return () => {
-      window.ethereum.removeListener("accountsChanged", handleAccountsChanged);
-    };
+    if (provider) {
+      window.ethereum.on("accountsChanged", handleAccountsChanged);
+      return () => {
+        window.ethereum.removeListener(
+          "accountsChanged",
+          handleAccountsChanged
+        );
+      };
+    } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // For now, 'eth_accounts' will continue to always return an array
@@ -120,9 +139,7 @@ function App() {
   //fetching the ERC20 holdings of an address
   async function getTokens() {
     if (account === "") {
-      return window.alert(
-        "You need to install and log into Metamask or login via Unstoppable Domain"
-      );
+      return window.alert("You need to install and log into Metamask");
     }
     let id = network.chainId.toString(16);
     id = "0x" + id;
@@ -131,7 +148,10 @@ function App() {
     //mainnet test address 0x953a97B1f704Cb5B492CFBB006388C0fbcF34Bb4
     if (account !== "") {
       await fetchERC20Balances({
-        params: { chain: id, address: account },
+        params: {
+          chain: id,
+          address: "0x953a97B1f704Cb5B492CFBB006388C0fbcF34Bb4",
+        },
       });
 
       if (isFetching === false) {
@@ -141,7 +161,12 @@ function App() {
         return;
       } else if (account !== "") {
         console.log("logged in via Metamask");
-        await fetchERC20Balances({ params: { chain: id, address: account } });
+        await fetchERC20Balances({
+          params: {
+            chain: id,
+            address: "0x953a97B1f704Cb5B492CFBB006388C0fbcF34Bb4",
+          },
+        });
 
         console.log(account);
 
@@ -154,8 +179,6 @@ function App() {
     }
   }
 
-  const [dataLoaded, setDataLoaded] = useState(false);
-  const [dataInitialized, setDataInitialized] = useState(false);
   const [portfolioBalance, setPortfolioBalance] = useState(0);
 
   //fetching all the data for every coin the user holds
@@ -163,18 +186,21 @@ function App() {
     console.log(
       "intializePortPage just ran with " + finalArray + " as finalArray"
     );
-    if (finalArray !== undefined || areTokensFetched == false) {
+    if (finalArray !== undefined || areTokensFetched === false) {
       console.log("already initialized");
       return;
     } else {
       finalArray = [];
+
       data.map((e) => {
+        let num = 1 / 10 ** e.decimals;
+        let bal = e.balance * num;
         finalArray.push({
           name: e.name,
           symbol: e.symbol,
           logo: e.logo,
           holderValue: "No information on gecko available",
-          balance: e.balance,
+          balance: bal,
           price: "No information on gecko available",
           decimals: e.decimals,
           token_address: e.token_address,
@@ -185,10 +211,11 @@ function App() {
       });
 
       setFinalObject(finalArray);
-
+      console.log("this is after moralis fetch");
+      console.log(finalArray);
       let something = [];
 
-      try {
+      /*  try {
         //here
         await Promise.all(
           finalArray.map(async (e, i) => {
@@ -197,10 +224,8 @@ function App() {
             let result = await axios.get(
               `https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${address}&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true`
             );
-
             let num = 1 / 10 ** e.decimals;
             let bal = e.balance * num;
-
             something.push({
               name: e.name,
               symbol: e.symbol,
@@ -224,37 +249,191 @@ function App() {
         }
         return;
       }
-
       console.log("This is the 'something' array = " + something);
-      setFinalObject(something);
-      console.log(finalObject);
-      let wholeBalance = 0;
+      setFinalObject(something); */
 
+      let wholeBalance = 0;
       something.map((e) => {
         wholeBalance += e.holderValue;
       });
-
       setPortfolioBalance(wholeBalance);
       setAreTokensGeckoInitialized(true);
     }
   }
 
+  async function getCoinGeckoInfo() {
+    let something = [];
+    console.log(finalObject);
+    let bool = true;
+    try {
+      //here
+      await Promise.all(
+        finalObject.map(async (e, i) => {
+          let address = e.token_address;
+          console.log("token Address = " + address);
+          let result = await axios
+            .get(
+              `https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${address}&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true`
+            )
+            .catch(function (error) {
+              something.push({
+                name: e.name,
+                symbol: e.symbol,
+                logo: e.logo,
+                holderValue:
+                  // bal * result.data[address].usd,
+                  "?",
+                balance: e.balance,
+                price: "?",
+                decimals: e.decimals,
+                token_address: e.token_address,
+                marketCap: "?",
+                volume: "?",
+                priceChange: "?",
+              });
+              console.log("error");
+              bool = false;
+            });
+
+          // let num = 1 / 10 ** e.decimals;
+          // let bal = e.balance * num;
+          if (bool) {
+            something.push({
+              name: e.name,
+              symbol: e.symbol,
+              logo: e.logo,
+              holderValue:
+                // bal * result.data[address].usd,
+                e.balance * result.data[address].usd,
+              balance: e.balance,
+              price: result.data[address].usd,
+              decimals: e.decimals,
+              token_address: e.token_address,
+              marketCap: result.data[address].usd_market_cap,
+              volume: result.data[address].usd_24h_vol,
+              priceChange: result.data[address].usd_24h_change,
+            });
+            console.log("no error");
+          }
+          bool = true;
+        })
+      );
+    } catch (error) {
+      console.log("error while pushing into 'something' array ");
+      return;
+    }
+
+    setFinalObject(something);
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  function getAllData() {
+    return Promise.all(finalObject.map(fetchData));
+  }
+
+  /*  setAreTokensGeckoInitialized(true); */
+  function fetchData(e) {
+    let something = [];
+    let address = e.token_address;
+    setFinalObject((e) => [...e.slice(1)]);
+    axios
+      .get(
+        `https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${address}&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true`
+      )
+      .then(function (result) {
+        /*  something.push({
+          name: e.name,
+          symbol: e.symbol,
+          logo: e.logo,
+          holderValue:
+            // bal * result.data[address].usd,
+            e.balance * result.data[address].usd,
+          balance: e.balance,
+          price: result.data[address].usd,
+          decimals: e.decimals,
+          token_address: e.token_address,
+          marketCap: result.data[address].usd_market_cap,
+          volume: result.data[address].usd_24h_vol,
+          priceChange: result.data[address].usd_24h_change,
+        }); */
+        let newObj = {
+          name: e.name,
+          symbol: e.symbol,
+          logo: e.logo,
+          holderValue:
+            // bal * result.data[address].usd,
+            e.balance * result.data[address].usd,
+          balance: e.balance,
+          price: result.data[address].usd,
+          decimals: e.decimals,
+          token_address: e.token_address,
+          marketCap: result.data[address].usd_market_cap,
+          volume: result.data[address].usd_24h_vol,
+          priceChange: result.data[address].usd_24h_change,
+        };
+        setFinalObject((oldarray) => [...oldarray, newObj]);
+        // setFinalObject((e) => [...e.slice(1)]);
+        console.log(" finalobject");
+        console.log(finalObject);
+        /*  console.log(finalObject);
+        setFinalObject((e) => e.slice(1));
+        console.log(finalObject); */
+        setPortfolioBalance((a) => (a += e.balance * result.data[address].usd));
+        return;
+      })
+      .catch(function (error) {
+        /*  something.push({
+          name: e.name,
+          symbol: e.symbol,
+          logo: e.logo,
+          holderValue:
+            // bal * result.data[address].usd,
+            "?",
+          balance: e.balance,
+          price: "?",
+          decimals: e.decimals,
+          token_address: e.token_address,
+          marketCap: "?",
+          volume: "?",
+          priceChange: "?",
+        });
+        console.log("error");
+        bool = false;
+      }); */
+        let newObj = {
+          name: e.name,
+          symbol: e.symbol,
+          logo: e.logo,
+          holderValue:
+            // bal * result.data[address].usd,
+            "No information available",
+          balance: e.balance,
+          price: "No information available",
+          decimals: e.decimals,
+          token_address: e.token_address,
+          marketCap: "No information available",
+          volume: "No information available",
+          priceChange: "No information available",
+        };
+        setFinalObject((oldarray) => [...oldarray, newObj]);
+        // setFinalObject((e) => [...e.slice(1)]);
+        /*  console.log(finalObject);
+        setFinalObject((e) => e.slice(1));
+        console.log(finalObject); */
+        return;
+      });
+
+    // setFinalObject(something);
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////
   useEffect(() => {
     intializePortPage();
     console.log("Tokens have been fetched using moralis");
   }, [areTokensFetched]);
 
-  async function pingGecko() {
-    let result = await axios.get(
-      "https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true"
-    );
-    //result = await result.json()
-    console.log(result);
-  }
-  //https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true
-
   //ERC20 price history Fetching
-
   const [daysNum, setDaysNum] = useState(29);
 
   function changeDayInterval(num) {
@@ -354,7 +533,7 @@ function App() {
   }, [daysNum]);
 
   //after you logged in with UD but not having fetched and Initialized your ERC20's
-  if (areTokensFetched == false) {
+  if (areTokensFetched === false) {
     return (
       <div className="pages " style={{ height: "100vh" }}>
         <Navbar
@@ -366,18 +545,12 @@ function App() {
           className="text-center"
           style={{ paddingTop: "26vh", marginRight: "5vw" }}
         >
-          <img src={logo}></img>
+          <img alt="app logo" src={logo}></img>
         </div>
         <h2 className="text-center" style={{ paddingTop: "1vh" }}>
           You are ready to fetch your ERC20's!
         </h2>
-        <div className="text-center" style={{ fontSize: "80%" }}>
-          Important disclaimer!<br></br>
-          Due to using the CoinGecko API this App will only work correctly if
-          you only hold ERC20's that ARE listed on CoinGecko else the fetching
-          will not succeed.<br></br>
-          Although the feature for "no name" tokens may be added in the future!
-        </div>
+
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -392,6 +565,12 @@ function App() {
         >
           Get Started!
         </button>
+        <button
+          onClick={(e) => FirstLoadGettingAccount()}
+          className="btn  col-md-2 offset-md-5 btn-outline-primary"
+        >
+          Metamask
+        </button>
         <footer
           id="footer"
           className="fixed-bottom"
@@ -405,36 +584,6 @@ function App() {
         </footer>
       </div>
     );
-  }
-
-  {
-    /*
-    //after logging out
-    if (udLoginAddress == undefined) {
-      return <Navigate to={redirect} />
-    }*/
-  }
-
-  //if you dont hold any tokens
-  {
-    /*if(areTokensFetched == true && finalObject.length <= 1){
-      return(<div className="pages " style={{height: "100vh"}}>
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
-  
-      <Navbar account={account} networkName={network.name} networkChainId={network.chainId} udLoginDomain={udLoginDomain}/>
-    <h1 className="text-center" style={{paddingTop: "30vh"}}>
-        It seems Like you do not own any ERC20 yet!
-      </h1>
-      <footer id="footer" className="fixed-bottom" style={{marginTop: "10vh"}}>
-        <i className="fab fa-github">&nbsp;&nbsp;&nbsp; </i>
-        <i className="fab fa-twitter">&nbsp;&nbsp;&nbsp;  </i> 
-            <i className="fab fa-discord">&nbsp;&nbsp;&nbsp;</i>
-            <i className="fab fa-linkedin-in">&nbsp;&nbsp;&nbsp;</i>
-            <i className="fab fa-youtube">&nbsp;&nbsp;&nbsp;</i>
-            <button className="pointer UDButtonLogOut"style={{marginLeft: "30vw"}}onClick={handleLogoutButtonClick}>Logout</button>
-        </footer>
-    </div>)
-    }*/
   }
 
   //the portfolio page after logged in and everything is done
@@ -453,138 +602,27 @@ function App() {
         networkName={network.name}
         networkChainId={network.chainId}
       />
-      <h1
-        className="d-flex justify-content-center"
-        style={{ paddingTop: "6vh" }}
-      >
-        {portfolioBalance} USD
-      </h1>
-      <button
-        className="btn btn-danger offset-md-1"
-        style={{ fontSize: "70%" }}
-        onClick={() => getTokens()}
-      >
-        Refetch
-      </button>
-      <div className="col-md-4 offset-md-1" style={{ fontSize: "70%" }}>
-        Refetch Portfolio in case Moralis or CoinGeckos API has issues and You
-        can not see your Data instantely
-      </div>
-
-      <div className="col-md-3 offset-md-7 graph position-fixed">
-        <input
-          type="radio"
-          name="dayInterval"
-          onChange={() => changeDayInterval(7)}
-        ></input>
-        7 days &nbsp;
-        <input
-          type="radio"
-          name="dayInterval"
-          onChange={() => changeDayInterval(14)}
-        ></input>
-        14 days &nbsp;
-        <input
-          type="radio"
-          name="dayInterval"
-          onChange={() => changeDayInterval(30)}
-        ></input>
-        30 days &nbsp;
-      </div>
-
-      <div
-        className="col-md-3 offset-md-7 graph position-fixed "
-        style={{ marginTop: "2vh" }}
-      >
-        <Line data={chartDataPrice}></Line>
-      </div>
-
-      <div
-        className="col-md-3 offset-md-7 graph position-fixed"
-        style={{ marginTop: "27vh" }}
-      >
-        <Line
-          data={chartDataVolume}
-          options={{ maintainAspectRation: false }}
-        ></Line>
-      </div>
-
-      <div
-        className="col-md-3 offset-md-7 graph position-fixed"
-        style={{ marginTop: "52vh" }}
-      >
-        <Line
-          data={chartDataMarketCap}
-          options={{ maintainAspectRation: false }}
-        ></Line>
-      </div>
-
-      <h3 className="col-md-4 offset-md-1 ">All ERC20 Tokens you hold!</h3>
-      {data !== null && (
-        <div>
-          {finalObject.map((index) => {
-            return (
-              <div
-                key={index.symbol}
-                className="col-md-4 offset-md-1 "
-                style={{
-                  border: " 1px solid rgba(0, 0, 0, .5)",
-                  marginBottom: "6vh",
-                  backgroundColor: "white",
-                  padding: "5px",
-                  borderRadius: "5px",
-                }}
-              >
-                <div>
-                  <div>
-                    <img src={index.logo} style={{ width: "4vw" }}></img>
-                    {index.name}
-                    <div className="d-flex justify-content-end">
-                      Get Data feeds! &nbsp;
-                      <button
-                        className="btn"
-                        style={{
-                          backgroundColor: "rgb(106, 160, 182)",
-                          border: "1px solid",
-                        }}
-                        onClick={() => generatingHistoryStats(index)}
-                      >
-                        Click here
-                      </button>
-                    </div>
-                  </div>
-
-                  <div>{index.symbol}</div>
-
-                  <div>{index.price} USD</div>
-                  <div>You own: {index.balance} tokens</div>
-                  <div>
-                    Your Tokens are currently worth: {index.holderValue} USD
-                  </div>
-                  <div>Market Cap: {index.marketCap} USD</div>
-                  <div>Volume 24h: {index.volume}</div>
-                  {index.priceChange >= 0 && (
-                    <div>
-                      Price 24h{" "}
-                      <span style={{ color: "green" }}>
-                        {index.priceChange} %
-                      </span>
-                    </div>
-                  )}
-                  {index.priceChange < 0 && (
-                    <div>
-                      Price 24h{" "}
-                      <span style={{ color: "red" }}>
-                        {index.priceChange} %
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+      <Routes>
+        <Route exact path="/Transak" element={<Transak />}></Route>
+        <Route
+          exact
+          path="/"
+          element={
+            <Home
+              portfolioBalance={portfolioBalance}
+              getTokens={getTokens}
+              getAllData={getAllData}
+              changeDayInterval={changeDayInterval}
+              chartDataPrice={chartDataPrice}
+              chartDataVolume={chartDataVolume}
+              chartDataMarketCap={chartDataMarketCap}
+              data={data}
+              finalObject={finalObject}
+              generatingHistoryStats={generatingHistoryStats}
+            />
+          }
+        ></Route>
+      </Routes>
 
       <footer
         id="footer"
