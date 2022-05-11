@@ -70,6 +70,7 @@ function App() {
   }, []);
 
   async function FirstLoadGettingAccount() {
+    // eslint-disable-next-line
     if (typeof window.ethereum !== undefined) {
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",

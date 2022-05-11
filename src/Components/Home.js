@@ -1,4 +1,5 @@
 import { Line /* , Pie, Chart  */ } from "react-chartjs-2";
+// eslint-disable-next-line
 import { Chart as ChartJS } from "chart.js/auto";
 import React /* , { useState, useEffect }  */ from "react";
 /* import logo from "../LogoMakr-1ceYNX.png";
