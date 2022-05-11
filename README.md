@@ -2,7 +2,7 @@
 
 ## Hackathon's submissions requirements
 
-- Working Website:
+- Working Website: [Link](https://strong-meerkat-b1f6bc.netlify.app/)
 - Demo video:
 - Eth Address: 0xCF4a75825f40b46bEdca7aBFC6bfF63a50752724
 - Discord Id: 353599460145627136
