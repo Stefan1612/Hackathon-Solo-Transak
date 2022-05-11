@@ -1,8 +1,9 @@
-import { Line, Pie, Chart } from "react-chartjs-2";
+import { Line /* , Pie, Chart  */ } from "react-chartjs-2";
+// eslint-disable-next-line
 import { Chart as ChartJS } from "chart.js/auto";
-import React, { useState, useEffect } from "react";
-import logo from "../LogoMakr-1ceYNX.png";
-import Navbar from "./Navbar";
+import React /* , { useState, useEffect }  */ from "react";
+/* import logo from "../LogoMakr-1ceYNX.png";
+import Navbar from "./Navbar"; */
 
 const Home = ({
   portfolioBalance,
@@ -17,8 +18,8 @@ const Home = ({
   generatingHistoryStats,
 }) => {
   //if you dont hold any tokens
-  {
-    /*if(areTokensFetched == true && finalObject.length <= 1){
+
+  /*if(areTokensFetched == true && finalObject.length <= 1){
       return(<div className="pages " style={{height: "100vh"}}>
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
   
@@ -36,7 +37,7 @@ const Home = ({
         </footer>
     </div>)
     }*/
-  }
+
   return (
     <div>
       <h1
