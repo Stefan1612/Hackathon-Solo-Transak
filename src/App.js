@@ -3,18 +3,18 @@ import React, { useState, useEffect } from "react";
 import { useERC20Balances } from "react-moralis";
 import axios from "axios";
 import { ethers } from "ethers";
-import { Route, Link, Routes, Navigate } from "react-router-dom";
+import { Route, /* Link, */ Routes /* , Navigate */ } from "react-router-dom";
 import Navbar from "./Components/Navbar.js";
 import Home from "./Components/Home";
 import Transak from "./Components/Transak";
-import { Line, Pie, Chart } from "react-chartjs-2";
+/* import { Line, Pie, Chart } from "react-chartjs-2"; */
 // import PiePort from "./Components/PiePort.js"
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "./LogoMakr-1ceYNX.png";
 
 const moment = require("moment");
-const { utils, BigNumber } = require("ethers");
+const { utils /* , BigNumber */ } = require("ethers");
 
 function App() {
   //handle State
@@ -30,13 +30,15 @@ function App() {
   }
   let signer;
   if (window.ethereum) {
+    // eslint-disable-next-line
     signer = provider.getSigner();
   }
-
+  // eslint-disable-next-line
   const [areTokensGeckoInitialized, setAreTokensGeckoInitialized] =
     useState(false);
   const [areTokensFetched, setAreTokensFetched] = useState(false);
   //getting al ERC20 tokens moralis hook
+  // eslint-disable-next-line
   const { fetchERC20Balances, data, isFetching, error } = useERC20Balances({
     data: [],
   });
@@ -85,7 +87,7 @@ function App() {
       return () => {
         window.ethereum.removeListener("chainChanged", handleChainChanged);
       };
-    }
+    } // eslint-disable-next-line
   }, []);
 
   function handleChainChanged(_chainId) {
@@ -156,6 +158,7 @@ function App() {
 
       if (isFetching === false) {
         let balance = await provider.getBalance(account);
+        // eslint-disable-next-line
         balance = await bigNumIntoEther4Decimals(balance);
         setAreTokensFetched(true);
         return;
@@ -172,6 +175,7 @@ function App() {
 
         if (isFetching === false) {
           let balance = await provider.getBalance(account);
+          // eslint-disable-next-line
           balance = await bigNumIntoEther4Decimals(balance);
           setAreTokensFetched(true);
         }
@@ -191,7 +195,7 @@ function App() {
       return;
     } else {
       finalArray = [];
-
+      // eslint-disable-next-line
       data.map((e) => {
         let num = 1 / 10 ** e.decimals;
         let bal = e.balance * num;
@@ -253,6 +257,7 @@ function App() {
       setFinalObject(something); */
 
       let wholeBalance = 0;
+      // eslint-disable-next-line
       something.map((e) => {
         wholeBalance += e.holderValue;
       });
@@ -260,7 +265,7 @@ function App() {
       setAreTokensGeckoInitialized(true);
     }
   }
-
+  // eslint-disable-next-line
   async function getCoinGeckoInfo() {
     let something = [];
     console.log(finalObject);
@@ -334,6 +339,7 @@ function App() {
 
   /*  setAreTokensGeckoInitialized(true); */
   function fetchData(e) {
+    // eslint-disable-next-line
     let something = [];
     let address = e.token_address;
     setFinalObject((e) => [...e.slice(1)]);
@@ -428,10 +434,13 @@ function App() {
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
-  useEffect(() => {
-    intializePortPage();
-    console.log("Tokens have been fetched using moralis");
-  }, [areTokensFetched]);
+  useEffect(
+    () => {
+      intializePortPage();
+      console.log("Tokens have been fetched using moralis");
+    }, // eslint-disable-next-line
+    [areTokensFetched]
+  );
 
   //ERC20 price history Fetching
   const [daysNum, setDaysNum] = useState(29);
@@ -523,14 +532,17 @@ function App() {
     setCurrentIndex(index);
   }
 
-  useEffect(() => {
-    console.log(
-      "daysNum has been changed to " +
-        daysNum +
-        " generatingHistoryStats will refetch"
-    );
-    generatingHistoryStats(currentIndex);
-  }, [daysNum]);
+  useEffect(
+    () => {
+      console.log(
+        "daysNum has been changed to " +
+          daysNum +
+          " generatingHistoryStats will refetch"
+      );
+      generatingHistoryStats(currentIndex);
+    }, // eslint-disable-next-line
+    [daysNum]
+  );
 
   //after you logged in with UD but not having fetched and Initialized your ERC20's
   if (areTokensFetched === false) {
