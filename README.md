@@ -32,6 +32,7 @@ Fetches all ERC20's instantly and visualizes their Historic data.
 - [React](https://reactjs.org/)
 - [ethers.js](https://docs.ethers.io/v5/)
 - [MUI: React UI Library](https://mui.com/)
+- Bootstrap
 
 ## Backend
 
