@@ -46,17 +46,17 @@ const Home = ({
       >
         {portfolioBalance} USD
       </h1>
-      <button
+      {/* <button
         className="btn btn-danger offset-md-1"
         style={{ fontSize: "70%" }}
         onClick={() => getTokens()}
       >
         Refetch
-      </button>
-      <div className="col-md-4 offset-md-1" style={{ fontSize: "70%" }}>
+      </button> */}
+      {/*  <div className="col-md-4 offset-md-1" style={{ fontSize: "70%" }}>
         Refetch Portfolio in case Moralis or CoinGeckos API has issues and You
         can not see your Data instantly
-      </div>
+      </div> */}
       {/* <div>
   <button
     onClick={(e) => getCoinGeckoInfo()}

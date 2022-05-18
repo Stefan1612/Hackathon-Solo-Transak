@@ -153,7 +153,7 @@ function App() {
       await fetchERC20Balances({
         params: {
           chain: id,
-          address: "0x953a97B1f704Cb5B492CFBB006388C0fbcF34Bb4",
+          address: account,
         },
       });
 
@@ -164,15 +164,12 @@ function App() {
         setAreTokensFetched(true);
         return;
       } else if (account !== "") {
-        console.log("logged in via Metamask");
         await fetchERC20Balances({
           params: {
             chain: id,
-            address: "0x953a97B1f704Cb5B492CFBB006388C0fbcF34Bb4",
+            address: account,
           },
         });
-
-        console.log(account);
 
         if (isFetching === false) {
           let balance = await provider.getBalance(account);
@@ -216,8 +213,7 @@ function App() {
       });
 
       setFinalObject(finalArray);
-      console.log("this is after moralis fetch");
-      console.log(finalArray);
+
       let something = [];
 
       /*  try {
@@ -269,14 +265,14 @@ function App() {
   // eslint-disable-next-line
   async function getCoinGeckoInfo() {
     let something = [];
-    console.log(finalObject);
+
     let bool = true;
     try {
       //here
       await Promise.all(
         finalObject.map(async (e, i) => {
           let address = e.token_address;
-          console.log("token Address = " + address);
+
           let result = await axios
             .get(
               `https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${address}&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true`
@@ -297,7 +293,7 @@ function App() {
                 volume: "?",
                 priceChange: "?",
               });
-              console.log("error");
+
               bool = false;
             });
 
@@ -319,7 +315,6 @@ function App() {
               volume: result.data[address].usd_24h_vol,
               priceChange: result.data[address].usd_24h_change,
             });
-            console.log("no error");
           }
           bool = true;
         })
@@ -334,8 +329,13 @@ function App() {
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  function getAllData() {
-    return Promise.all(finalObject.map(fetchData));
+  const [fetched, setFetched] = useState(false);
+  async function getAllData() {
+    if (fetched === false) {
+      await Promise.all(finalObject.map(fetchData));
+      setFetched(true);
+    }
+    return;
   }
 
   /*  setAreTokensGeckoInitialized(true); */
@@ -380,12 +380,7 @@ function App() {
           priceChange: result.data[address].usd_24h_change,
         };
         setFinalObject((oldarray) => [...oldarray, newObj]);
-        // setFinalObject((e) => [...e.slice(1)]);
-        console.log(" finalobject");
-        console.log(finalObject);
-        /*  console.log(finalObject);
-        setFinalObject((e) => e.slice(1));
-        console.log(finalObject); */
+
         setPortfolioBalance((a) => (a += e.balance * result.data[address].usd));
         return;
       })

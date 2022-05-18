@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import transakSDK from "@transak/transak-sdk";
+import axios from "axios";
 const Transak = () => {
+  const [transakSucceed, setTransakSucceed] = useState(false);
   let transak = new transakSDK({
-    apiKey:
-      "1a1f680f-b867-4f34-911a-b2bda3da1bca" /* process.env.REACT_APP_API_KEY_TRANSAK */, // Your API Key
+    apiKey: process.env.REACT_APP_API_KEY_TRANSAK, // Your API Key
     environment: "STAGING", // STAGING/PRODUCTION
     hostURL: window.location.origin,
     widgetHeight: "625px",
@@ -30,37 +31,31 @@ const Transak = () => {
   transak.on(transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData) => {
     console.log(orderData);
     transak.close();
+    setTransakSucceed(true);
   });
 
-  ///////////////////
-  /* ${ process.env.REACT_APP_API_KEY_TRANSAK } */
-  ////////////////////////////
-
   return (
-    <div>
-      Transak
-      {/*  <div>
-        <iframe
-          height="625"
-          title="Transak On/Off Ramp Widget"
-          src={`https://staging-global.transak.com?apiKey=1a1f680f-b867-4f34-911a-b2bda3da1bca&cryptoCurrencyCode=DAI`}
-          frameborder="no"
-          allowtransparency="true"
-          allowfullscreen=""
-          style={{
-            display: "block",
-            width: "100%",
-            maxHeight: "625px",
-            maxWidth: "500px",
-          }}
-        ></iframe>
-      </div> */}
+    <div
+      style={{
+        textAlign: "center",
+      }}
+    >
       <button
-        style={{ marginTop: "30vh", textAlign: "center", marginLeft: "20vw" }}
+        style={{
+          backgroundColor: "rgb(106, 160, 182)",
+          border: "1px solid",
+          textAlign: "center",
+          marginTop: "30vh",
+        }}
         onClick={(e) => startTransak()}
       >
         Open transak
       </button>
+      <div>
+        You can easily buy yourself some crypto using One Click leveraging
+        Transak's technology.
+      </div>
+      {transakSucceed && <div>Succeed</div>}
     </div>
   );
 };
