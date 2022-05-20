@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import transakSDK from "@transak/transak-sdk";
-import axios from "axios";
+/* import axios from "axios"; */
+import { Box, Button, Typography } from "@mui/material";
 const Transak = () => {
   const [transakSucceed, setTransakSucceed] = useState(false);
   let transak = new transakSDK({
@@ -35,28 +36,37 @@ const Transak = () => {
   });
 
   return (
-    <div
+    <Box
       style={{
         textAlign: "center",
       }}
     >
-      <button
+      <Box marginTop={"5vh"}>
+        <Typography component={"h1"} variant={"h2"}>
+          Want to buy your favourite Crypto Currency?
+        </Typography>
+      </Box>{" "}
+      <Box>
+        <Typography component={"p"} variant={"h5"}>
+          You can easily buy yourself some crypto with One Click using Transak.
+        </Typography>
+      </Box>
+      <Button
         style={{
           backgroundColor: "rgb(106, 160, 182)",
           border: "1px solid",
           textAlign: "center",
-          marginTop: "30vh",
+          marginTop: "5vh",
+          width: "25vw",
+          height: "10vh",
         }}
+        variant="contained"
         onClick={(e) => startTransak()}
       >
         Open transak
-      </button>
-      <div>
-        You can easily buy yourself some crypto using One Click leveraging
-        Transak's technology.
-      </div>
-      {transakSucceed && <div>Succeed</div>}
-    </div>
+      </Button>
+      {transakSucceed && <Box>Succeed</Box>}
+    </Box>
   );
 };
 

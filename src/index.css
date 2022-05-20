@@ -64,8 +64,8 @@ body {
   font-size: 70%;
   font-weight: 700;
 }
-.UDButton:hover {
-}
+/* .UDButton:hover {
+} */
 
 .loader-wrapper {
   width: 100%;
@@ -103,4 +103,22 @@ body {
   font-size: 210%;
   background-color: rgb(136, 175, 190);
   opacity: 0.8;
+}
+
+.wrapper {
+  width: 30vw;
+  /*  border: 1px solid black; */
+  overflow: hidden; /* add this to contain floated children */
+}
+.first {
+  width: 30vw;
+  float: left; /* add this */
+  /* border: 1px solid; */
+}
+.second {
+  width: 30vw;
+  margin-left: 35vw;
+  border: 1px solid black;
+  float: left; /* add this */
+  position: fixed;
 }
