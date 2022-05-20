@@ -2,7 +2,7 @@
 
 ## Hackathon's submissions requirements
 
-- Working Website: [Link](https://strong-meerkat-b1f6bc.netlify.app/)
+- Working Website: [Link](https://wonderful-horse-26f082.netlify.app/)
 - Demo video:
 - Eth Address: 0xCF4a75825f40b46bEdca7aBFC6bfF63a50752724
 - Discord Id: 353599460145627136
@@ -10,8 +10,6 @@
 
 ### To-do's
 
-- Rewrite frontend with MUI instead of Bootstrap
-- Allow the Portfolio to track ALL ERC20's.
 - Use a subgraph to grab historic data instead of centralized Coin Gecko API
 
 ## Approach
