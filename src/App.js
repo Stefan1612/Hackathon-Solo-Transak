@@ -4,9 +4,12 @@ import { useERC20Balances } from "react-moralis";
 import axios from "axios";
 import { ethers } from "ethers";
 import { Route, /* Link, */ Routes /* , Navigate */ } from "react-router-dom";
-import Navbar from "./Components/Navbar.js";
+/* import Navbar from "./Components/Navbar.js"; */
+import NavbarTwo from "./Components/NavbarTwo.js";
 import Home from "./Components/Home";
 import Transak from "./Components/Transak";
+/* import Footer from "./Components/Footer"; */
+import { Box, Container } from "@mui/material";
 /* import { Line, Pie, Chart } from "react-chartjs-2"; */
 // import PiePort from "./Components/PiePort.js"
 
@@ -543,43 +546,45 @@ function App() {
   //after you logged in with UD but not having fetched and Initialized your ERC20's
   if (areTokensFetched === false) {
     return (
-      <div className="pages " style={{ height: "100vh" }}>
-        <Navbar
+      <Box className="pages " style={{ height: "100vh" }}>
+        {/*  <Navbar
           account={account}
           networkName={network.name}
           networkChainId={network.chainId}
-        />
-        <div
-          className="text-center"
-          style={{ paddingTop: "26vh", marginRight: "5vw" }}
-        >
-          <img alt="app logo" src={logo}></img>
-        </div>
-        <h2 className="text-center" style={{ paddingTop: "1vh" }}>
-          You are ready to fetch your ERC20's!
-        </h2>
+        /> */}
+        <NavbarTwo />
+        <Container>
+          <Box
+            className="text-center"
+            style={{ paddingTop: "20vh", marginRight: "5vw" }}
+          >
+            <img alt="app logo" src={logo}></img>
+          </Box>
+          <h2 className="text-center" style={{ paddingTop: "1vh" }}>
+            Start your personal Portfolio right now!
+          </h2>
 
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-          integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
-          crossOrigin="anonymous"
-          referrerPolicy="no-referrer"
-        />
+          <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+            integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
+            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
+          />
 
-        <button
-          className="btn  col-md-2 offset-md-5 btn-outline-primary"
-          onClick={() => getTokens()}
-        >
-          Get Started!
-        </button>
-        <button
-          onClick={(e) => FirstLoadGettingAccount()}
-          className="btn  col-md-2 offset-md-5 btn-outline-primary"
-        >
-          Metamask
-        </button>
-        <footer
+          <button
+            className="btn  col-md-2 offset-md-5 btn-outline-primary"
+            onClick={() => getTokens()}
+          >
+            Get Started!
+          </button>
+          <button
+            onClick={(e) => FirstLoadGettingAccount()}
+            className="btn  col-md-2 offset-md-5 btn-outline-primary"
+          >
+            Metamask
+          </button>
+          {/*   <footer
           id="footer"
           className="fixed-bottom"
           style={{ marginTop: "10vh" }}
@@ -589,14 +594,15 @@ function App() {
           <i className="fab fa-discord">&nbsp;&nbsp;&nbsp;</i>
           <i className="fab fa-linkedin-in">&nbsp;&nbsp;&nbsp;</i>
           <i className="fab fa-youtube">&nbsp;&nbsp;&nbsp;</i>
-        </footer>
-      </div>
+        </footer> */}
+        </Container>
+      </Box>
     );
   }
 
   //the portfolio page after logged in and everything is done
   return (
-    <div>
+    <Box>
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -604,35 +610,37 @@ function App() {
         crossOrigin="anonymous"
         referrerPolicy="no-referrer"
       />
-
-      <Navbar
+      <NavbarTwo />
+      {/* <Navbar
         account={account}
         networkName={network.name}
         networkChainId={network.chainId}
-      />
-      <Routes>
-        <Route exact path="/Transak" element={<Transak />}></Route>
-        <Route
-          exact
-          path="/"
-          element={
-            <Home
-              portfolioBalance={portfolioBalance}
-              getTokens={getTokens}
-              getAllData={getAllData}
-              changeDayInterval={changeDayInterval}
-              chartDataPrice={chartDataPrice}
-              chartDataVolume={chartDataVolume}
-              chartDataMarketCap={chartDataMarketCap}
-              data={data}
-              finalObject={finalObject}
-              generatingHistoryStats={generatingHistoryStats}
-            />
-          }
-        ></Route>
-      </Routes>
+      /> */}
+      <Container>
+        <Routes>
+          <Route exact path="/Transak" element={<Transak />}></Route>
+          <Route
+            exact
+            path="/"
+            element={
+              <Home
+                portfolioBalance={portfolioBalance}
+                getTokens={getTokens}
+                getAllData={getAllData}
+                changeDayInterval={changeDayInterval}
+                chartDataPrice={chartDataPrice}
+                chartDataVolume={chartDataVolume}
+                chartDataMarketCap={chartDataMarketCap}
+                data={data}
+                finalObject={finalObject}
+                generatingHistoryStats={generatingHistoryStats}
+                areTokensFetched={areTokensFetched}
+              />
+            }
+          ></Route>
+        </Routes>
 
-      <footer
+        {/*  <footer
         id="footer"
         className="fixed-bottom"
         style={{ marginTop: "10vh" }}
@@ -642,8 +650,10 @@ function App() {
         <i className="fab fa-discord">&nbsp;&nbsp;&nbsp;</i>
         <i className="fab fa-linkedin-in">&nbsp;&nbsp;&nbsp;</i>
         <i className="fab fa-youtube">&nbsp;&nbsp;&nbsp;</i>
-      </footer>
-    </div>
+      </footer> */}
+        {/*  <Footer /> */}
+      </Container>
+    </Box>
   );
 }
 
