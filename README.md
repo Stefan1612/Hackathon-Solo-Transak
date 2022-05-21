@@ -18,6 +18,8 @@ Useable for every network
 A portfolio app which allows the user to EITHER log in via Unstoppable DOMAIN or via metamask.
 Fetches all ERC20's instantly and visualizes their Historic data.
 
+Enabling the option to buy cryptocurrencies with One Click using Transak.
+
 ## Stack
 
 ### Blockchain Technologies
