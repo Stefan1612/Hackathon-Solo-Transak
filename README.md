@@ -3,7 +3,7 @@
 ## Hackathon's submissions requirements
 
 - Working Website: [Link](https://wonderful-horse-26f082.netlify.app/)
-- Demo video:
+- Demo video: [Youtube](https://www.youtube.com/watch?v=fDDe3e7RKws)
 - Eth Address: 0xCF4a75825f40b46bEdca7aBFC6bfF63a50752724
 - Discord Id: 353599460145627136
 - Discord Name: SimpleBlock#6604
